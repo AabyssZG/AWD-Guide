@@ -1,5 +1,10 @@
 # AWD比赛指导手册
+
+如果你要参加AWD相关比赛，相信本项目能给你带来帮助~
+
 ![AWD-Guide](https://socialify.git.ci/AabyssZG/AWD-Guide/image?description=1&font=Bitter&forks=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F54609266%3Fv%3D4&owner=1&pattern=Solid&stargazers=1&theme=Dark)
+
+**如果你觉得本项目不错，欢迎给我点个Star，万分感谢~~**
 
 ## 1# 比赛环境
 
@@ -10,7 +15,7 @@ Windows+Linux组合模式：
 - Windows Server 2008 + Centos6.x/Ubuntu14/16.04/Ubuntu17.01
 
 
-## 2# 防守准备
+## 2# 防守准备（Defense）
 
 ### 2.1# Windows加固
 
@@ -255,7 +260,7 @@ deny from all
 
 
 
-## 3# 攻击准备
+## 3# 攻击准备（Attack）
 
 ### 3.1# 主要准备内容
 
