@@ -271,31 +271,68 @@ deny from all
 ```
 uname -a
 cat /proc/version
+cat /etc/issue
+uname -a
+lsb_release -a
+hostnamectl
 ```
 
-- CVE-2017-6074 (DCCP双重释放漏洞 > 2.6.18 ）
+这里列举一些可用利用的提权漏洞：
+
+- CVE-2023-0386（Linux OverlayFS权限提升漏洞）
+- CVE-2021-4034（Linux Polkit本地权限提升漏洞）
+- CVE-2017-6074 （DCCP双重释放漏洞 > 2.6.18 ）
 - CVE-2016-5195（脏牛，kernel 2.6.22 < 3.9 (x86/x64)）
 - CVE-2016-8655（Ubuntu 12.04、14.04，Debian 7、8）
 - CVE-2017-1000367（sudo本地提权漏洞 ）
 - CVE-2016-1247（Nginx权限提升漏洞）
 - CVE-2017-16995(Ubuntu16.04   kernel:4.14-4.4)
 
-### 3.3# Windows提权：
+Kali命令查询：
 
-- MS17-017
-- MS17-010
-- 各种Potato
-- CVE-2022-24521
+```
+searchsploit CentOS 7
+searchsploit Ubuntu 16.04
+```
+
+[https://gitlab.com/exploit-database/exploitdb-bin-sploits/-/tree/main](https://gitlab.com/exploit-database/exploitdb-bin-sploits/-/tree/main)
+
+编译提权Exp
+
+```
+gcc -o /usr/share/nginx/html/***** /usr/share/nginx/html/*****.c -Wall
+```
+
+直接提权，确认权限：
+
+```
+cat /etc/shadow
+```
+
+其他提权姿势：[https://www.freebuf.com/articles/system/244627.html](https://www.freebuf.com/articles/system/244627.html)
+
+### 3.3# Windows提权和漏洞
+
+这里列举一些Windows的漏洞：
+
+- 各种Potato（Github上面基本都有）
+- CVE-2023-35359（Windows内核权限提升漏洞，开源了）
+- CVE-2022-24521（没有Exp的可以找我要）
+- CVE-2019-1405
+- CVE-2019-1322
+- MS17-017（整型溢出漏洞）
+- MS17-010（永恒之蓝，可看[https://blog.zgsec.cn/archives/172.html](https://blog.zgsec.cn/archives/172.html)）
 
 ### 3.4# 中间件漏洞
 
-- IIS
-- Apache
-- Jboss
-- Mysql
-- Nginx
-- Tomcat
-- Weblogic
+- IIS（解析漏洞、远程代码执行）
+- Apache（解析漏洞）
+- Nginx（解析漏洞）
+- Jboss（CVE-2017-7504/CVE-2017-12149/CVE-2015-7501）
+- Mysql（弱口令）
+- Tomcat（弱口令Getshell）
+- Weblogic（CVE-2020-2551/CVE-2020-2555/CVE-2020-2883）
+- SpringBoot（未授权访问漏洞和RCE漏洞，具体可看[https://blog.zgsec.cn/archives/129.html](https://blog.zgsec.cn/archives/129.html)）
 
 ### 3.5# 集成服务环境漏洞
 
