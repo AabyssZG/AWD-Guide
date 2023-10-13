@@ -608,16 +608,11 @@ header(php'flag:'.file_get_contents('/tmp/flag'));
 
 ## 4# 参考链接
 
-[http://freebuf.com/](http://freebuf.com/)
-
-[https://github.com/Huseck](https://github.com/Huseck)
-
-[https://www.seebug.org/](https://www.seebug.org/)
-
-[https://www.anquanke.com/](https://www.anquanke.com/)
-
-[https://www.exploit-db.com/](https://www.exploit-db.com/)
-
-[http://www.bugscan.net/source/template/vulns/](http://www.bugscan.net/source/template/vulns/)
-
-[https://xz.aliyun.com/t/12687](https://xz.aliyun.com/t/12687)
+- [http://freebuf.com/](http://freebuf.com/)
+- [https://github.com/Huseck](https://github.com/Huseck)
+- [https://blog.zgsec.cn/](https://blog.zgsec.cn/)
+- [https://paper.seebug.org/3044/](https://paper.seebug.org/3044/)
+- [https://www.anquanke.com/](https://www.anquanke.com/)
+- [https://www.exploit-db.com/](https://www.exploit-db.com/)
+- [http://www.bugscan.net/source/template/vulns/](http://www.bugscan.net/source/template/vulns/)
+- [https://xz.aliyun.com/t/12687](https://xz.aliyun.com/t/12687)
