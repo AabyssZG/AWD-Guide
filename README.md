@@ -1,5 +1,5 @@
 # AWD比赛指导手册
-![AWD-Guide](https://socialify.git.ci/AabyssZG/AWD-Guide/image?description=1&font=Raleway&issues=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F54609266%3Fv%3D4&name=1&owner=1&pattern=Solid&stargazers=1&theme=Dark)
+![AWD-Guide](https://socialify.git.ci/AabyssZG/AWD-Guide/image?description=1&font=Bitter&forks=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F54609266%3Fv%3D4&owner=1&pattern=Solid&stargazers=1&theme=Dark)
 
 ## 1# 比赛环境
 
