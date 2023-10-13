@@ -272,7 +272,6 @@ deny from all
 uname -a
 cat /proc/version
 cat /etc/issue
-uname -a
 lsb_release -a
 hostnamectl
 ```
