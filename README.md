@@ -621,3 +621,15 @@ header(php'flag:'.file_get_contents('/tmp/flag'));
 - [https://www.exploit-db.com/](https://www.exploit-db.com/)
 - [http://www.bugscan.net/source/template/vulns/](http://www.bugscan.net/source/template/vulns/)
 - [https://xz.aliyun.com/t/12687](https://xz.aliyun.com/t/12687)
+
+
+## 🙏 5# 感谢各位师傅
+
+## Stargazers
+
+[![Stargazers repo roster for @AabyssZG/AWD-Guide](https://reporoster.com/stars/AabyssZG/AWD-Guide)](https://github.com/AabyssZG/AWD-Guide/stargazers)
+
+
+## Forkers
+
+[![Forkers repo roster for @AabyssZG/AWD-Guide](https://reporoster.com/forks/AabyssZG/AWD-Guide)](https://github.com/AabyssZG/AWD-Guide/network/members)
