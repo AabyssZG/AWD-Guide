@@ -259,15 +259,10 @@ deny from all
 
 ### 3.1# 主要准备内容
 
-1.各类CMS软件包最新版准备
-2.扫描工具：nmap、nessus、metasploit更新
-2.漏洞利用脚本poc、exp
+1. 各类CMS软件包最新版准备
+2. 扫描工具：Nmap、Nessus、Metasploit更新
+2. 漏洞利用脚本Poc、Exp
 
-kali更新，解决kali更新签名问题：
-
-```
-wget -q -O - https://archive.kali.org/archive-key.asc  | apt-key add
-```
 
 ### 3.2# Linux提权
 
@@ -326,6 +321,7 @@ cat /proc/version
 - Qibocms
 - Seacms
 - Semcms
+- ThinkPHP
 - Wolfcms
 - Wordpress
 - Zabbix
@@ -570,7 +566,7 @@ while (1){
 header(php'flag:'.file_get_contents('/tmp/flag'));
 ```
 
-条件允许的话，将flag信息直接读取并返回到header头中，这样做不易被发现。
+条件允许的话，将flag信息直接读取并返回到header头中，这样做不易被发现
 
 
 
