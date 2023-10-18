@@ -89,16 +89,23 @@ mysql –u username –p password database < from.sql
 
 #### 2.5.0# 设置只读权限
 
+对Web文件设置只读权限
+
+```c
+chmod 0444 /var/www/html/*
+chmod 0444 /var/www/html/*.php
+```
+
 Web根目录设置只读权限
 
-```C
+```c
 chmod 0555 /var/www/html
 ```
 
 改变文件的属主和属组来设置严格的权限
 
-```C
-chown -R root:root /var/www/html/        //设置拥有人为：root:root 或 httpd:httpd (推荐)
+```c
+chown -R root:root /var/www/html/        //设置拥有人为 root:root 或 httpd:httpd (推荐)
 chown -R apache:apache /var/www/html/    //确保 apache 拥有 /var/www/html/
 ```
 
@@ -106,16 +113,18 @@ chown -R apache:apache /var/www/html/    //确保 apache 拥有 /var/www/html/
 
 知己知彼，百战不殆
 
-```C
+```c
 uname -a                       //系统信息
 ps -aux                        //查询进程信息
-ps -ef | grep 进程名称
+ps -ef | grep 进程名称         //筛选指定进程
 id                             //用于显示用户ID，以及所属群组ID
 netstat -ano/-a                //查看端口情况
 cat /etc/passwd                //用户情况
 ls /home/                      //用户情况
 find / -type d -perm -002      //可写目录检查
 grep -r "flag" /var/www/html/  //在Web目录下查找flag
+ipconfig                       //Windows上查看网卡信息
+ifconfig                       //Linux上查看网卡信息
 ```
 
 #### 2.5.2# 查看开放端口
@@ -130,34 +139,34 @@ firewall-cmd –reload                                          //防火墙重�
 
 防止在对源码进行修改时出问题，或者被攻击方删除源码而准备
 
-压缩
+压缩源码：
 
 ```C
 tar -cvf web.tar /var/www/html
 zip -q -r web.zip /var/www/html
 ```
 
-解压缩
+解压缩源码：
 
 ```C
 tar -xvf web.tar -c /var/www/html
 unzip web.zip -d /var/www/html
 ```
 
-备份
+备份源码：
 
 ```C
 mv web.tar /tmp
 mv web.zip /home/xxx
 ```
 
-上传下载
+上传和下载源码：
 
-```C
-scp username@servername:/path/filename /tmp/local_destination //从服务器下载单个文件到本地
-scp /path/local_filename username@servername:/path            //从本地上传单个文件到服务器
-scp -r username@servername:remote_dir/ /tmp/local_dir         //从服务器下载整个目录到本地
-scp -r /tmp/local_dir username@servername:remote_dir          //从本地上传整个目录到服务器
+```c
+scp username@servername:/path/filename /tmp/local_destination  //从服务器下载单个文件到本地
+scp /path/local_filename username@servername:/path             //从本地上传单个文件到服务器
+scp -r username@servername:remote_dir/ /tmp/local_dir          //从服务器下载整个目录到本地
+scp -r /tmp/local_dir username@servername:remote_dir           //从本地上传整个目录到服务器
 ```
 
 #### 2.5.4# 备份数据库
@@ -198,31 +207,59 @@ find /var/www//html -path '*config*’                             //查找配�
 
 #### 2.5.6# 查询进程线程
 
-```
-netstat / ps -aux
+```c
+netstat
+ps -aux
 netstat -apt
 ```
 
-#### 2.5.7# SSH
+#### 2.5.7# SSH安全加固
 
+限制IP登录方法
+
+```c
+sudo nano /etc/ssh/sshd_config       //以root权限编辑SSH配置文件
+AllowUsers username@192.168.0.100    //找到并编辑以下行，确保其取消注释并设置为所需的IP地址
 ```
-w/fuser 
+
+禁用 `root` 远程登录
+
+```c
+sudo nano /etc/ssh/sshd_config       //以root权限编辑SSH配置文件
+PermitRootLogin no                   //将PermitRootLogi设置为“no”
+```
+
+按用户和组限制SSH登录
+
+```c
+sudo nano /etc/ssh/sshd_config       //以root权限编辑SSH配置文件
+AllowUsers testuser                  //设置只允许 testuser 登录SSH
+AllowUsers testuser@192.168.1.100    //设置只允许 192.168.1.100 的机器用 testuser 账户登录SSH
+AllowGroups test                     //设置用户组白名单
+//需要注意的是：如果同时指定了 AllowUsers 与 AllowGroups 那么必须要在两个选项中都匹配到的用户才能进行SSH登录
+```
+
+重启SSH服务
+
+```c
+service sshd restart
+systemctl restart sshd.service
 ```
 
 #### 2.5.8# 杀掉进程
 
-```
-kill -9 pid
+```c
+kill -9 pid            //Linux上
+taskkill /f /pid pid   //Windows上
 ```
 
 #### 2.5.9# 搜索关键词文件
 
-```C
+```c
 find /var/www/html -name *.php -mmin -5                        //查看最近5分钟修改文件
 find ./ -name '*.php' | xargs wc -l | sort -u                  //寻找行数最短文件，一般有可能是一句话木马
 grep -r --include=*.php  '[^a-z]eval($_POST'  /var/www/html    //查包含关键字的php文件
-find /var/www/html -type f -name "*.php" | xargs grep "eval(" |more //在Linux系统中使用find、grep和xargs命令的组合，用于在指定目录（/var/www/html）下查找所有以.php为扩展名的文件，并搜索这些文件中包含字符串"eval("的行
-//使用more命令来分页显示结果，以便在输出较长时进行逐页查看
+find /var/www/html -type f -name "*.php" | xargs grep "eval(" |more //在Linux系统中使用find、grep和xargs命令的组合，用于在指定目录（/var/www/html）下查找所有以.php为扩展名的文件，并搜索这些文件中包含字符串"eval("的行，并使用more命令来分页显示结果以便在输出较长时进行逐页查看
 ```
 
 #### 2.5.10# 查杀不死马
@@ -230,7 +267,7 @@ find /var/www/html -type f -name "*.php" | xargs grep "eval(" |more //在Linux�
 也可以利用命令自动进行查找删除
 
 ```c
-ps aux | grep www-data | grep -v grep | awk '{print $2}' | xargs kill -9
+ps -aux | grep www-data | grep -v grep | awk '{print $2}' | xargs kill -9
 ```
 
 然后重启服务
@@ -244,7 +281,9 @@ service php-fpm restart
 老规矩查看进程
 
 ```c
-ps -ef / px -aux
+ps -ef
+px -aux
+ps -aux | grep www-data
 ```
 
 注意 `www-data` 权限的 `/bin/sh`，很有可能是nc
@@ -272,6 +311,13 @@ php_flag engine off     //这个指令将 PHP 的引擎标志（engine）设置�
 deny from all
 </FilesMatch>  //这三行命令使用正则表达式匹配了以 .php、.phtml、.php3、.pht、.php4、.php5、.php7、.shtml 结尾的文件，并将其访问权限设置为拒绝所有
 </Directory>
+```
+
+#### 2.5.13# 设置禁Ping
+
+```c
+echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //临时开启禁ping
+echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //关闭禁ping
 ```
 
 
