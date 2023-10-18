@@ -4,7 +4,12 @@
 
 ![AWD-Guide](https://socialify.git.ci/AabyssZG/AWD-Guide/image?description=1&font=Bitter&forks=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F54609266%3Fv%3D4&owner=1&pattern=Solid&stargazers=1&theme=Dark)
 
-**如果你觉得本项目不错，欢迎给我点个Star，万分感谢~~**
+**手册版本号：V1.1-2023/10/18**
+
+这是一本能让你从零开始学习AWD并深入AWD的手册，我也会根据经验和需求逐步完善相关内容
+
+**如果你觉得本项目不错，欢迎给我点个Star，万分感谢~~ 有什么新的攻击或者防守的姿势、手法，欢迎与我交流**
+
 
 
 ## 0# 什么是AWD
