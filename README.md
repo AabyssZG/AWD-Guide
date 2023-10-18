@@ -38,7 +38,9 @@ AWD赛制是一种网络安全竞赛的赛制。将真实服务器设施和渗�
 
 ## 2# 防守准备（Defense）
 
-### 2.1# Windows加固
+### 2.0# 基本加固流程
+
+#### 2.0.1# Windows加固流程
 
 先备份：Web源码、数据库
 
@@ -46,7 +48,7 @@ AWD赛制是一种网络安全竞赛的赛制。将真实服务器设施和渗�
 2. 开启系统日志审计功能
 3. 禁用guest账户、关闭文件共享
 4. 确保启动项内容是可控的
-5. 限制3389远程访问控制的连接数：在本地组策略编辑器里面，依次展开计算机配置--->管理模板--->Windows组件--->远程桌面服务--->远程桌面会话主机--->连接--->限制连接的数量
+5. 限制3389远程访问控制的连接数：在本地组策略编辑器里面，依次展开计算机配置-->管理模板-->Windows组件-->远程桌面服务-->远程桌面会话主机-->连接-->限制连接的数量
 6. 使用工具监控关键目录文件:文件操作监控.exe、御剑文件监控.exe
 7. 恶意代码文件，通过PCHunter、Monitor查找
 8. Web目录环境查找相关可疑文件：jpg/png/rar，查看属性、解压看文件内容
@@ -55,7 +57,7 @@ AWD赛制是一种网络安全竞赛的赛制。将真实服务器设施和渗�
 11. 修改Web站点管理员访问路径、默认口令、数据库口令
 12. 安装WAF脚本，防护Web站点，禁止其他漏洞
 
-### 2.2# Linux加固
+#### 2.0.2# Linux加固流程
 
 先备份：Web源码、数据库
 
@@ -67,48 +69,71 @@ AWD赛制是一种网络安全竞赛的赛制。将真实服务器设施和渗�
 6. Web站点口令,站点管理员路径修改
 7. 系统加固：iptable
 
-### 2.3# Mysql加固
+### 2.1# 基本信息搜集
+
+在防守的时候，信息搜集也很重要，正所谓“知己知彼，百战不殆”
+
+#### 2.1.1# 明确Linux机器信息
+
+```c
+uname -a                       //系统信息
+ps -aux                        //查询进程信息
+ps -ef | grep 进程名称         //筛选指定进程
+id                             //用于显示用户ID，以及所属群组ID
+cat /etc/passwd                //查看用户情况
+ls /home/                      //查看用户情况
+find / -type d -perm -002      //可写目录检查
+ifconfig                       //Linux上查看网卡信息
+```
+
+#### 2.1.2# 明确Windows机器信息
+
+```c
+whoami /all                    //Windows上查看用户详细信息
+ipconfig  /all                 //Windows上查看网卡信息
+```
+
+#### 2.1.3# 查看开放端口
+
+```c
+netstat                                                       //查看活动连接
+netstat -ano/-a                                               //查看端口情况
+netstat -anp                                                  //查看端口
+firewall-cmd --zone= public --remove-port=80/tcp –permanent   //关闭端口
+firewall-cmd –reload                                          //防火墙重启
+```
+
+#### 2.1.4# 默认口令（弱口令）更改
 
 为了防范弱口令攻击，Mysql密码默认都是root，phpstudy默认密码123456
 
-1. 不使用默认口令，修改成复杂的，并确保和web环境连接
-2. 设置只允许本地127.0.0.1账户登录：修改 `bind-address=127.0.0.1` ；在配置文件中加入 `seccure_file_priv=NULL`
-3. 开启日志审计功能：`general_log_file=`路径
+还有其他默认密码admin，top100， top1000等
 
-因为最常用的是Mysql数据库，所以基本的攻防大部分都是用mysql数据库的命令
+**尤其是WEB应用的后台密码修改**
 
-备份指定数据库：
-
-```mysql
-mysqldump –u username –p password databasename > target.sql
+```c
+passwd username                                                  //ssh口令修改
+set password for mycms@localhost = password('18ciweufhi28746');  //MySQL密码修改
+find /var/www//html -path '*config*’                             //查找配置文件中的密码凭证
 ```
 
-备份所有数据库：
+#### 2.1.5# 找本地Flag
 
-```mysql
-mysqldump –all -databases > all.sql
+```c
+grep -r "flag" /var/www/html/  //Linux：在Web目录下查找flag
+findstr /s /i "flag" *.*       //Windows：当前目录以及所有子目录下的所有文件中查找"flag"这个字符串
 ```
 
-导入数据库：
+#### 2.1.6# 设置禁Ping
 
-```mysql
-mysql –u username –p password database < from.sql
+```c
+echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //临时开启禁ping
+echo "0" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //关闭禁ping
 ```
 
-### 2.4# Mssql加固
+### 2.2# Web安全防护
 
-1. 删除不必要的账号	
-2. SQLServer用户口令安全	
-3. 根据用户分配帐号避免帐号共享
-4. 分配数据库用户所需的最小权限
-5. 网络访问限制
-6. SQLServer登录审计
-7. SQLServer安全事件审计
-8. 配置日志功能
-
-### 2.5# 防守常用命令
-
-#### 2.5.0# 设置只读权限
+#### 2.2.1# 设置只读权限
 
 对Web文件设置只读权限
 
@@ -130,33 +155,7 @@ chown -R root:root /var/www/html/        //设置拥有人为 root:root 或 http
 chown -R apache:apache /var/www/html/    //确保 apache 拥有 /var/www/html/
 ```
 
-#### 2.5.1# 明确机器信息
-
-知己知彼，百战不殆
-
-```c
-uname -a                       //系统信息
-ps -aux                        //查询进程信息
-ps -ef | grep 进程名称         //筛选指定进程
-id                             //用于显示用户ID，以及所属群组ID
-netstat -ano/-a                //查看端口情况
-cat /etc/passwd                //用户情况
-ls /home/                      //用户情况
-find / -type d -perm -002      //可写目录检查
-grep -r "flag" /var/www/html/  //在Web目录下查找flag
-ipconfig                       //Windows上查看网卡信息
-ifconfig                       //Linux上查看网卡信息
-```
-
-#### 2.5.2# 查看开放端口
-
-```c
-netstat -anp                                                  //查看端口
-firewall-cmd --zone= public --remove-port=80/tcp –permanent   //关闭端口
-firewall-cmd –reload                                          //防火墙重启
-```
-
-#### 2.5.3# 备份源码
+#### 2.2.2# 备份源码
 
 防止在对源码进行修改时出问题，或者被攻击方删除源码而准备
 
@@ -190,9 +189,69 @@ scp -r username@servername:remote_dir/ /tmp/local_dir          //从服务器下
 scp -r /tmp/local_dir username@servername:remote_dir           //从本地上传整个目录到服务器
 ```
 
-#### 2.5.4# 备份数据库
+#### 2.2.3# 配置 `.htaccess`
 
-因为最常用的是Mysql数据库，所以基本的攻防大部分都是用mysql数据库的命令
+利用 `.htaccess` 配置文件禁止php文件执行
+
+```php
+<Directory "/var/www/html/upload">   //指定目录后续的指令将应用于该目录
+Options -ExecCGI -Indexes            //禁用了目录中的 CGI 执行和目录索引（显示目录内容列表）功能。
+AllowOverride None                   //不允许在该目录中使用 .htaccess 文件来覆盖服务器的配置。
+RemoveHandler .php .phtml .php3 .pht .php4 .php5 .php7 .shtml  
+RemoveType .php .phtml .php3 .pht .php4 .php5 .php7 .shtml      
+//这两个指令移除指定文件扩展名的处理器和类型。
+//在这种情况下，这些指令从 Apache 的处理列表中移除了与 PHP 相关的扩展名和服务器端包含（SSI）文件类型。
+php_flag engine off     //这个指令将 PHP 的引擎标志（engine）设置为关闭状态，从而禁用了在该目录中执行 PHP 脚本的能力。
+<FilesMatch ".+\.ph(p[3457]?|t|tml)$">
+deny from all
+</FilesMatch>  //这三行命令使用正则表达式匹配了以 .php、.phtml、.php3、.pht、.php4、.php5、.php7、.shtml 结尾的文件，并将其访问权限设置为拒绝所有
+</Directory>
+```
+
+#### 2.2.4# PHP参数安全配置
+
+首先找到PHP的配置文件
+
+```c
+/etc/php/{version}/php.ini
+```
+
+禁用高危函数
+
+```php
+disable_functions = dl,exec,system,passthru,popen,proc_open,pcntl_exec,shell_exec,mail,imap_open,imap_mail,putenv,ini_set,apache_setenv,symlink,link,eval
+```
+
+配置 `open_basedir` （将用户访问文件的活动范围限制在指定的区域）
+
+```php
+open_basedir=/var/www/html
+```
+
+禁用魔术引号（自动对外部来源数据进行转义，防止SQL注入）
+
+```php
+magic_quotes_gpc = Off
+```
+
+重启PHP
+
+```c
+sudo service php7.0-fpm restart
+sudo systemctl restart php7.0-fpm.service
+```
+
+### 2.3# 数据库安全加固
+
+#### 2.3.1# Mysql加固
+
+为了防范弱口令攻击，Mysql密码默认都是root，phpstudy默认密码123456
+
+1. 不使用默认口令，修改成复杂的，并确保和web环境连接
+2. 设置只允许本地127.0.0.1账户登录：修改 `bind-address=127.0.0.1` ；在配置文件中加入 `seccure_file_priv=NULL`
+3. 开启日志审计功能：`general_log_file=`路径
+
+因为最常用的是Mysql数据库，所以基本的攻防大部分都是用MySql数据库的命令
 
 备份指定数据库：
 
@@ -212,29 +271,20 @@ mysqldump –all -databases > all.sql
 mysql –u username –p password database < from.sql
 ```
 
-#### 2.5.5# 口令更改
+#### 2.3.2# Mssql加固
 
-为了防范弱口令攻击，Mysql密码默认都是root，phpstudy默认密码123456
+1. 删除不必要的账号	
+2. SQLServer用户口令安全	
+3. 根据用户分配帐号避免帐号共享
+4. 分配数据库用户所需的最小权限
+5. 网络访问限制
+6. SQLServer登录审计
+7. SQLServer安全事件审计
+8. 配置日志功能
 
-还有其他默认密码admin，top100， top1000等
+### 2.4# 远程控制加固
 
-**尤其是WEB应用的后台密码修改**
-
-```c
-passwd username                                                  //ssh口令修改
-set password for mycms@localhost = password('18ciweufhi28746');  //MySQL密码修改
-find /var/www//html -path '*config*’                             //查找配置文件中的密码凭证
-```
-
-#### 2.5.6# 查询进程线程
-
-```c
-netstat
-ps -aux
-netstat -apt
-```
-
-#### 2.5.7# SSH安全加固
+#### 2.4.1# SSH安全加固
 
 限制IP登录方法
 
@@ -267,14 +317,24 @@ sudo service sshd restart
 sudo systemctl restart sshd.service
 ```
 
-#### 2.5.8# 杀掉进程
+### 2.5# 应急响应
+
+#### 2.5.1# 查询进程线程
+
+```c
+netstat
+ps -aux
+netstat -apt
+```
+
+#### 2.5.2# 杀掉进程
 
 ```c
 kill -9 pid            //Linux上
 taskkill /f /pid pid   //Windows上
 ```
 
-#### 2.5.9# 搜索关键词文件
+#### 2.5.3# 搜索WebShell文件
 
 ```c
 find /var/www/html -name *.php -mmin -5                        //查看最近5分钟修改文件
@@ -283,7 +343,7 @@ grep -r --include=*.php  '[^a-z]eval($_POST'  /var/www/html    //查包含关键
 find /var/www/html -type f -name "*.php" | xargs grep "eval(" |more //在Linux系统中使用find、grep和xargs命令的组合，用于在指定目录（/var/www/html）下查找所有以.php为扩展名的文件，并搜索这些文件中包含字符串"eval("的行，并使用more命令来分页显示结果以便在输出较长时进行逐页查看
 ```
 
-#### 2.5.10# 查杀不死马
+#### 2.5.4# 查杀不死马
 
 也可以利用命令自动进行查找删除
 
@@ -297,7 +357,7 @@ ps -aux | grep www-data | grep -v grep | awk '{print $2}' | xargs kill -9
 service php-fpm restart
 ```
 
-#### 2.5.11# 杀弹shelll
+#### 2.5.5# 杀弹反弹shell
 
 老规矩查看进程
 
@@ -313,65 +373,6 @@ ps -aux | grep www-data
 
 ```c
 kill ps -aux | grep www-data | grep apache2 | awk '{print $2}'
-```
-
-#### 2.5.12# 设置WAF
-
-利用 `.htaccess` 配置文件禁止php文件执行
-
-```php
-<Directory "/var/www/html/upload">   //指定目录后续的指令将应用于该目录
-Options -ExecCGI -Indexes            //禁用了目录中的 CGI 执行和目录索引（显示目录内容列表）功能。
-AllowOverride None                   //不允许在该目录中使用 .htaccess 文件来覆盖服务器的配置。
-RemoveHandler .php .phtml .php3 .pht .php4 .php5 .php7 .shtml  
-RemoveType .php .phtml .php3 .pht .php4 .php5 .php7 .shtml      
-//这两个指令移除指定文件扩展名的处理器和类型。
-//在这种情况下，这些指令从 Apache 的处理列表中移除了与 PHP 相关的扩展名和服务器端包含（SSI）文件类型。
-php_flag engine off     //这个指令将 PHP 的引擎标志（engine）设置为关闭状态，从而禁用了在该目录中执行 PHP 脚本的能力。
-<FilesMatch ".+\.ph(p[3457]?|t|tml)$">
-deny from all
-</FilesMatch>  //这三行命令使用正则表达式匹配了以 .php、.phtml、.php3、.pht、.php4、.php5、.php7、.shtml 结尾的文件，并将其访问权限设置为拒绝所有
-</Directory>
-```
-
-#### 2.5.13# 设置禁Ping
-
-```c
-echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //临时开启禁ping
-echo "0" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //关闭禁ping
-```
-
-#### 2.5.14# PHP参数安全配置
-
-首先找到PHP的配置文件
-
-```c
-/etc/php/{version}/php.ini
-```
-
-禁用高危函数
-
-```php
-disable_functions = dl,exec,system,passthru,popen,proc_open,pcntl_exec,shell_exec,mail,imap_open,imap_mail,putenv,ini_set,apache_setenv,symlink,link,eval
-```
-
-配置 `open_basedir` （将用户访问文件的活动范围限制在指定的区域）
-
-```php
-open_basedir=/var/www/html
-```
-
-禁用魔术引号（自动对外部来源数据进行转义，防止SQL注入）
-
-```php
-magic_quotes_gpc = Off
-```
-
-重启PHP
-
-```c
-sudo service php7.0-fpm restart
-sudo systemctl restart php7.0-fpm.service
 ```
 
 
