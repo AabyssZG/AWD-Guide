@@ -263,8 +263,8 @@ AllowGroups test                     //设置用户组白名单
 重启SSH服务
 
 ```c
-service sshd restart
-systemctl restart sshd.service
+sudo service sshd restart
+sudo systemctl restart sshd.service
 ```
 
 #### 2.5.8# 杀掉进程
@@ -339,6 +339,39 @@ deny from all
 ```c
 echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //临时开启禁ping
 echo "0" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //关闭禁ping
+```
+
+#### 2.5.14# PHP参数安全配置
+
+首先找到PHP的配置文件
+
+```c
+/etc/php/{version}/php.ini
+```
+
+禁用高危函数
+
+```php
+disable_functions = dl,exec,system,passthru,popen,proc_open,pcntl_exec,shell_exec,mail,imap_open,imap_mail,putenv,ini_set,apache_setenv,symlink,link,eval
+```
+
+配置 `open_basedir` （将用户访问文件的活动范围限制在指定的区域）
+
+```php
+open_basedir=/var/www/html
+```
+
+禁用魔术引号（自动对外部来源数据进行转义，防止SQL注入）
+
+```php
+magic_quotes_gpc = Off
+```
+
+重启PHP
+
+```c
+sudo service php7.0-fpm restart
+sudo systemctl restart php7.0-fpm.service
 ```
 
 
