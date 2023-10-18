@@ -317,7 +317,7 @@ deny from all
 
 ```c
 echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //临时开启禁ping
-echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //关闭禁ping
+echo "0" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //关闭禁ping
 ```
 
 
