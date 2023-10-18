@@ -24,7 +24,7 @@ AWD赛制是一种网络安全竞赛的赛制。将真实服务器设施和渗�
 
 ## 1# 比赛环境
 
-通常比赛环境有以下两种情况：
+通常比赛环境有以下三种情况：
 
 - 混合靶机情况：运维机器 `Windows 10` + Win靶机 `Windows Server 2003/2008/2012` 或者 `Windows 7` + Linux靶机 `Centos6.x` 或者 `Ubuntu14/16.04/Ubuntu17.01`
 - 纯Linux靶机情况：运维机器 `Windows 10` + Linux靶机 `Centos6.x` 或者 `Ubuntu14/16.04/Ubuntu17.01`
