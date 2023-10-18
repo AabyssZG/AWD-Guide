@@ -108,13 +108,14 @@ chown -R apache:apache /var/www/html/    //确保 apache 拥有 /var/www/html/
 
 ```C
 uname -a                       //系统信息
-ps -aux -ps -ef                //进程信息
+ps -aux                        //查询进程信息
+ps -ef | grep 进程名称
 id                             //用于显示用户ID，以及所属群组ID
 netstat -ano/-a                //查看端口情况
 cat /etc/passwd                //用户情况
 ls /home/                      //用户情况
 find / -type d -perm -002      //可写目录检查
-grep -r “flag” /var/www/html/  //查找本地flag
+grep -r "flag" /var/www/html/  //在Web目录下查找flag
 ```
 
 #### 2.5.2# 查看开放端口
