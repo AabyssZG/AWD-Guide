@@ -131,31 +131,9 @@ echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //临时开启禁ping
 echo "0" > /proc/sys/net/ipv4/icmp_echo_ignore_all     //关闭禁ping
 ```
 
-### 2.2# Web安全防护
+### 2.2# Web安全加固
 
-#### 2.2.1# 设置只读权限
-
-对Web文件设置只读权限
-
-```c
-chmod 0444 /var/www/html/*
-chmod 0444 /var/www/html/*.php
-```
-
-Web根目录设置只读权限
-
-```c
-chmod 0555 /var/www/html
-```
-
-改变文件的属主和属组来设置严格的权限
-
-```c
-chown -R root:root /var/www/html/        //设置拥有人为 root:root 或 httpd:httpd (推荐)
-chown -R apache:apache /var/www/html/    //确保 apache 拥有 /var/www/html/
-```
-
-#### 2.2.2# 备份源码
+#### 2.2.1# 备份源码
 
 防止在对源码进行修改时出问题，或者被攻击方删除源码而准备
 
@@ -187,6 +165,28 @@ scp username@servername:/path/filename /tmp/local_destination  //从服务器下
 scp /path/local_filename username@servername:/path             //从本地上传单个文件到服务器
 scp -r username@servername:remote_dir/ /tmp/local_dir          //从服务器下载整个目录到本地
 scp -r /tmp/local_dir username@servername:remote_dir           //从本地上传整个目录到服务器
+```
+
+#### 2.2.2# 设置只读权限
+
+对Web文件设置只读权限
+
+```c
+chmod 0444 /var/www/html/*
+chmod 0444 /var/www/html/*.php
+```
+
+Web根目录设置只读权限
+
+```c
+chmod 0555 /var/www/html
+```
+
+改变文件的属主和属组来设置严格的权限
+
+```c
+chown -R root:root /var/www/html/        //设置拥有人为 root:root 或 httpd:httpd (推荐)
+chown -R apache:apache /var/www/html/    //确保 apache 拥有 /var/www/html/
 ```
 
 #### 2.2.3# 配置 `.htaccess`
