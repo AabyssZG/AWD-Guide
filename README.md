@@ -177,14 +177,14 @@ scp -r /tmp/local_dir username@servername:remote_dir           //从本地上传
 
 #### 2.2.2 设置只读权限
 
-对Web文件设置只读权限
+对Web文件设置只读和执行权限（PHP等动态语言需要执行权限）
 
 ```c
-chmod 0444 /var/www/html/*
-chmod 0444 /var/www/html/*.php
+chmod 0555 /var/www/html/*
+chmod 0555 /var/www/html/*.php
 ```
 
-Web根目录设置只读权限
+Web根目录设置只读和执行权限
 
 ```c
 chmod 0555 /var/www/html
