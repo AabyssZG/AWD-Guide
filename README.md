@@ -921,7 +921,6 @@ cat /etc/shadow
 ## 4# 参考链接
 
 - [http://freebuf.com/](http://freebuf.com/)
-- [https://github.com/Huseck](https://github.com/Huseck)
 - [https://blog.zgsec.cn/](https://blog.zgsec.cn/)
 - [https://paper.seebug.org/3044/](https://paper.seebug.org/3044/)
 - [https://www.anquanke.com/](https://www.anquanke.com/)
