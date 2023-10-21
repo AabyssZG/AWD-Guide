@@ -242,6 +242,13 @@ open_basedir=/var/www/html
 magic_quotes_gpc = Off
 ```
 
+关闭PHP伪协议
+
+```php
+allow_url_fopen = Off
+allow_url_include = Off
+```
+
 重启PHP
 
 ```c
