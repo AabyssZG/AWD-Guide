@@ -227,7 +227,7 @@ deny from all
 禁用高危函数
 
 ```php
-disable_functions = dl,exec,system,passthru,popen,proc_open,pcntl_exec,shell_exec,mail,imap_open,imap_mail,putenv,ini_set,apache_setenv,symlink,link,eval
+disable_functions = dl,exec,system,passthru,popen,proc_open,pcntl_exec,shell_exec,mail,imap_open,imap_mail,putenv,ini_set,apache_setenv,symlink,link
 ```
 
 配置 `open_basedir` （将用户访问文件的活动范围限制在指定的区域）
