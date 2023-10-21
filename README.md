@@ -11,6 +11,7 @@
 ### 如何在线阅读？
 
 - 个人博客地址： [https://blog.zgsec.cn/archives/484.html](https://blog.zgsec.cn/archives/484.html)
+- 微信公众号地址：[https://mp.weixin.qq.com/s/1vR1rcGHK6YYdXlp4McR_w](https://mp.weixin.qq.com/s/1vR1rcGHK6YYdXlp4McR_w)
 
 **如果你觉得本项目不错，欢迎给我点个Star，万分感谢~~ 有什么新的攻击或者防守的姿势、手法，欢迎与我交流**
 
