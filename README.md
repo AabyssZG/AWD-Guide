@@ -38,9 +38,9 @@
 
 通常比赛环境有以下三种情况：
 
-- 混合靶机情况：运维机器 `Windows 10` + Win靶机 `Windows Server 2003/2008/2012` 或者 `Windows 7` + Linux靶机 `Centos6.x` 或者 `Ubuntu14/16.04/Ubuntu17.01`
-- 纯Linux靶机情况：运维机器 `Windows 10` + Linux靶机 `Centos6.x` 或者 `Ubuntu14/16.04/Ubuntu17.01`
-- 纯Windows靶机情况：运维机器 `Windows 10` + Win靶机 `Windows Server 2003/2008/2012` 或者 `Windows 7`
+- 混合靶机情况：运维机器 `Windows 10` + 攻击机 `Kali Linux` + Win靶机 `Windows Server 2003/2008/2012` 或者 `Windows 7` + Linux靶机 `Centos6.x` 或者 `Ubuntu14/16.04/Ubuntu17.01`
+- 纯Linux靶机情况：运维机器 `Windows 10` + 攻击机 `Kali Linux` + Linux靶机 `Centos6.x` 或者 `Ubuntu14/16.04/Ubuntu17.01`
+- 纯Windows靶机情况：运维机器 `Windows 10` + 攻击机 `Kali Linux` + Win靶机 `Windows Server 2003/2008/2012` 或者 `Windows 7`
 
 
 
