@@ -1,12 +1,16 @@
 # AWD比赛指导手册
 
-如果你要参加AWD相关比赛，相信本项目能给你带来帮助~
+### 纸上得来终觉浅,绝知此事要躬行。
 
 ![AWD-Guide](https://socialify.git.ci/AabyssZG/AWD-Guide/image?description=1&font=Bitter&forks=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F54609266%3Fv%3D4&owner=1&pattern=Solid&stargazers=1&theme=Dark)
 
 **手册版本号：V1.2.2-2023/10/21**
 
-这是一本能让你从零开始学习AWD并深入AWD的手册，我也会根据经验和需求逐步完善相关内容
+这是一本能让你从零开始学习AWD并深入AWD的手册，我也会根据经验和需求逐步完善相关内容。如果你要参加AWD相关比赛，相信本项目能给你带来帮助~
+
+### 如何在线阅读？
+
+- 个人博客地址： [https://blog.zgsec.cn/archives/484.html](https://blog.zgsec.cn/archives/484.html)
 
 **如果你觉得本项目不错，欢迎给我点个Star，万分感谢~~ 有什么新的攻击或者防守的姿势、手法，欢迎与我交流**
 
