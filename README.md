@@ -935,9 +935,9 @@ cat /etc/shadow
 
 ## Stargazers
 
-[![Stargazers repo roster for @AabyssZG/AWD-Guide](https://reporoster.com/stars/AabyssZG/AWD-Guide)](https://github.com/AabyssZG/AWD-Guide/stargazers)
+[![Stargazers repo roster for @AabyssZG/AWD-Guide](http://reporoster.com/stars/AabyssZG/AWD-Guide)](https://github.com/AabyssZG/AWD-Guide/stargazers)
 
 
 ## Forkers
 
-[![Forkers repo roster for @AabyssZG/AWD-Guide](https://reporoster.com/forks/AabyssZG/AWD-Guide)](https://github.com/AabyssZG/AWD-Guide/network/members)
+[![Forkers repo roster for @AabyssZG/AWD-Guide](http://reporoster.com/forks/AabyssZG/AWD-Guide)](https://github.com/AabyssZG/AWD-Guide/network/members)
