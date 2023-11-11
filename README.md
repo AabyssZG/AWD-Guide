@@ -93,6 +93,7 @@ cat /etc/passwd                //查看用户情况
 ls /home/                      //查看用户情况
 find / -type d -perm -002      //可写目录检查
 ifconfig                       //Linux上查看网卡信息
+ip addr show                   //Linux上查看网卡信息
 ```
 
 #### 2.1.2 明确Windows机器信息
