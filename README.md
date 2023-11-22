@@ -453,7 +453,7 @@ kill ps -aux | grep www-data | grep apache2 | awk '{print $2}'
 Nmap
 
 ```c
-namp -sn 192.168.0.0/24            //C段存活扫描
+nmap -sn 192.168.0.0/24            //C段存活扫描
 ```
 
 httpscan
