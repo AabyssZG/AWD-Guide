@@ -111,8 +111,8 @@ ipconfig  /all                 //Windows上查看网卡信息
 netstat                                                       //查看活动连接
 netstat -ano/-a                                               //查看端口情况
 netstat -anp                                                  //查看端口
-firewall-cmd --zone= public --remove-port=80/tcp –permanent   //关闭端口
-firewall-cmd –reload                                          //防火墙重启
+firewall-cmd --zone= public --remove-port=80/tcp -permanent   //关闭端口
+firewall-cmd -reload                                          //防火墙重启
 ```
 
 #### 2.1.4 默认口令（弱口令）更改
@@ -275,19 +275,19 @@ sudo systemctl restart php7.0-fpm.service
 备份指定数据库：
 
 ```sql
-mysqldump –u username –p password databasename > target.sql
+mysqldump -u username -p password databasename > target.sql
 ```
 
 备份所有数据库：
 
 ```sql
-mysqldump –all -databases > all.sql
+mysqldump -all -databases > all.sql
 ```
 
 导入数据库：
 
 ```sql
-mysql –u username –p password database < from.sql
+mysql -u username -p password database < from.sql
 ```
 
 对于MySQL的攻防，可以看这篇文章：[https://blog.zgsec.cn/archives/26.html](https://blog.zgsec.cn/archives/26.html)
@@ -461,7 +461,7 @@ nmap -sn 192.168.0.0/24            //C段存活扫描
 httpscan
 
 ```c
-httpscan.py 192.168.0.0/24 –t 10   //C段存活扫描
+httpscan.py 192.168.0.0/24 -t 10   //C段存活扫描
 ```
 
 #### 3.1.2 端口扫描
